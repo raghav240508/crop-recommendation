@@ -4,11 +4,27 @@
     {
       "src": "api/index.py",
       "use": "@vercel/python"
+    },
+    {
+      "src": "index.html",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "style.css",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "app.js",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "*.jpg",
+      "use": "@vercel/static"
     }
   ],
   "routes": [
     {
-      "src": "/(predict|api/predict|health|feature-ranges|presets|docs|openapi.json)(.*)",
+      "src": "/(predict|api|health|feature-ranges|presets|docs|redoc|openapi\\.json)(/.*)?",
       "dest": "api/index.py"
     },
     {
