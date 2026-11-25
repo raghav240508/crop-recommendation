@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Crop Recommendation</title>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body class="min-h-screen flex flex-col selection:bg-[#E09F3E]/30 selection:text-[#2B2118]">
+
+ 
+
+  <!-- Main Sticky Header (No Login Page) -->
+  <header class="sticky top-0 z-40 bg-[#FBF8F3]/95 backdrop-blur-md border-b border-[#EAE2D3]">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
+      <a href="#home" class="flex items-center gap-3 group focus:outline-none">
+        <div class="w-10 h-10 rounded-xl bg-[#2B2118] flex items-center justify-center shadow-md">
+          <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none">
+            <path d="M12 3V21" stroke="#E09F3E" stroke-width="2" stroke-linecap="round"/>
+            <path d="M12 7C9.5 7 8 5.5 8 3.5C10.5 3.5 12 5 12 7Z" fill="#E09F3E"/>
+            <path d="M12 7C14.5 7 16 5.5 16 3.5C13.5 3.5 12 5 12 7Z" fill="#E09F3E"/>
+            <path d="M12 11.5C9 11.5 7 9.8 7 7.5C10 7.5 12 9.2 12 11.5Z" fill="#E09F3E"/>
+            <path d="M12 11.5C15 11.5 17 9.8 17 7.5C14 7.5 12 9.2 12 11.5Z" fill="#E09F3E"/>
+            <path d="M12 16.5C8.5 16.5 6.5 14.5 6.5 12C9.8 12 12 14 12 16.5Z" fill="#5F7A38"/>
+            <path d="M12 16.5C15.5 16.5 17.5 14.5 17.5 12C14.2 12 12 14 12 16.5Z" fill="#5F7A38"/>
+          </svg>
+        </div>
+        <div class="leading-tight">
+          <span class="block text-base font-bold text-[#2B2118] tracking-tight">Crop Recommendation</span>
+          <span class="block text-[11px] font-medium text-[#777268]">Agricultural advisory</span>
+        </div>
+      </a>
+
+      <nav class="hidden md:flex items-center gap-6 text-sm font-medium text-[#777268]">
+        <a href="#input-all-7" class="hover:text-[#2B2118] transition py-1">Assessment</a>
+        <a href="#recommended-crop-box" class="hover:text-[#2B2118] transition py-1">Recommendation</a>
+        <a href="#inputs-info-box" class="hover:text-[#2B2118] transition py-1">Field inputs</a>
+      </nav>
+
+      <button type="button" onclick="runAssessmentAndScroll()" class="btn-olive px-4 py-2 rounded-lg text-xs sm:text-sm font-semibold shadow-sm">
+        Recommend
+      </button>
+    </div>
+  </header>
+
+  <main class="flex-1">
+    <div id="home" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 space-y-6">
+
+      <!-- Assessment Overview -->
+      <section class="hero-panel relative overflow-hidden min-h-[270px] sm:min-h-[300px] flex items-end">
+        <div class="absolute inset-0 z-0 overflow-hidden">
+          <img id="drone-img-0" src="images/drone_rice_paddies.jpg" onerror="fallbackImg(this, 'drone_rice_paddies.jpg')" alt="Green agricultural field" class="drone-slide drone-anim-0 active" />
+          <img id="drone-img-1" src="images/drone_millets_sorghum.jpg" onerror="fallbackImg(this, 'drone_millets_sorghum.jpg')" alt="Millet and sorghum field" class="drone-slide drone-anim-1" />
+          <img id="drone-img-2" src="images/drone_cotton_pulses.jpg" onerror="fallbackImg(this, 'drone_cotton_pulses.jpg')" alt="Cotton and pulse crops" class="drone-slide drone-anim-2" />
+          <img id="drone-img-3" src="images/drone_tropical_orchards.jpg" onerror="fallbackImg(this, 'drone_tropical_orchards.jpg')" alt="Tropical crop plantation" class="drone-slide drone-anim-3" />
+          <div class="hero-scrim"></div>
+        </div>
+
+        <div class="relative z-10 w-full p-6 sm:p-9 lg:p-10">
+          <div class="max-w-xl">
+            <p class="text-xs font-bold uppercase tracking-wider text-[#E9C77A] mb-2">Field planning tool</p>
+            <h1 class="text-3xl sm:text-4xl font-extrabold tracking-tight leading-tight text-white">
+              Choose the right crop for your field
+            </h1>
+            <p class="mt-3 text-sm sm:text-base text-white/85 leading-relaxed max-w-lg">
+              Enter soil nutrients and local weather conditions to generate a crop recommendation.
+            </p>
+            <button type="button" onclick="runAssessmentAndScroll()" class="mt-5 btn-sienna px-5 py-2.5 rounded-lg font-bold text-sm inline-flex items-center gap-2 cursor-pointer">
+              Start predicting
+              <span aria-hidden="true">↓</span>
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- 2-COLUMN BODY: LEFT (7 INPUTS + RECOMMENDED CROP) | RIGHT (INPUTS GUIDE) -->
+      <section class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+
+        <!-- LEFT COLUMN (7 cols) -->
+        <div class="lg:col-span-7 space-y-6">
+
+          <!-- LEFT TOP BOX: INPUT OF ALL 7 -->
+          <div id="input-all-7" class="portal-card p-6 space-y-5">
+            <div id="assessment-card" class="space-y-5 transition-all duration-300">
+              <div class="flex flex-wrap items-center justify-between gap-2 border-b border-[#EFE8DA] pb-3.5">
+                <div>
+                  <p class="text-[11px] font-bold uppercase tracking-wider text-[#777268]">Field conditions</p>
+                  <h2 class="text-lg sm:text-xl font-extrabold text-[#2B2118]">Enter soil and weather values</h2>
+                </div>
+                <span id="active-season-badge" class="text-xs font-semibold text-[#777268]">Seven inputs</span>
+              </div>
+
+              <form id="crop-input-form" onsubmit="event.preventDefault(); handleRecommendSubmit();" class="space-y-4">
+                <!-- Soil Inputs: N, P, K, pH -->
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                  <div class="bg-[#FBF8F3] p-3 rounded-xl border border-[#DED5C4] focus-within:border-[#5F7A38]">
+                    <label for="input-n" class="block text-xs font-bold text-[#2B2118] mb-1">Nitrogen (N)</label>
+                    <input id="input-n" type="number" min="0" max="140" step="1" value="90" required oninput="syncFromNumber('n')" class="w-full font-extrabold text-sm text-[#5F7A38] bg-white border border-[#DED5C4] rounded-lg px-2.5 py-1.5 outline-none mb-2" />
+                    <input id="slider-n" type="range" min="0" max="140" step="1" value="90" oninput="syncFromSlider('n')" class="rust-slider" />
+                  </div>
+
+                  <div class="bg-[#FBF8F3] p-3 rounded-xl border border-[#DED5C4] focus-within:border-[#A0522D]">
+                    <label for="input-p" class="block text-xs font-bold text-[#2B2118] mb-1">Phosphorus (P)</label>
+                    <input id="input-p" type="number" min="5" max="145" step="1" value="42" required oninput="syncFromNumber('p')" class="w-full font-extrabold text-sm text-[#A0522D] bg-white border border-[#DED5C4] rounded-lg px-2.5 py-1.5 outline-none mb-2" />
+                    <input id="slider-p" type="range" min="5" max="145" step="1" value="42" oninput="syncFromSlider('p')" class="rust-slider" />
+                  </div>
+
+                  <div class="bg-[#FBF8F3] p-3 rounded-xl border border-[#DED5C4] focus-within:border-[#E09F3E]">
+                    <label for="input-k" class="block text-xs font-bold text-[#2B2118] mb-1">Potassium (K)</label>
+                    <input id="input-k" type="number" min="5" max="205" step="1" value="43" required oninput="syncFromNumber('k')" class="w-full font-extrabold text-sm text-[#C88224] bg-white border border-[#DED5C4] rounded-lg px-2.5 py-1.5 outline-none mb-2" />
+                    <input id="slider-k" type="range" min="5" max="205" step="1" value="43" oninput="syncFromSlider('k')" class="rust-slider" />
+                  </div>
+
+                  <div class="bg-[#FBF8F3] p-3 rounded-xl border border-[#DED5C4] focus-within:border-[#2B2118]">
+                    <label for="input-ph" class="block text-xs font-bold text-[#2B2118] mb-1">Soil pH (ph)</label>
+                    <input id="input-ph" type="number" min="3.5" max="10.0" step="0.01" value="6.50" required oninput="syncFromNumber('ph')" class="w-full font-extrabold text-sm text-[#2B2118] bg-white border border-[#DED5C4] rounded-lg px-2.5 py-1.5 outline-none mb-2" />
+                    <input id="slider-ph" type="range" min="3.5" max="10.0" step="0.05" value="6.50" oninput="syncFromSlider('ph')" class="rust-slider" />
+                  </div>
+                </div>
+
+                <!-- Weather Inputs: Temperature, Humidity, Rainfall -->
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                  <div class="bg-[#FBF8F3] p-3 rounded-xl border border-[#DED5C4] focus-within:border-[#A0522D]">
+                    <label for="input-temp" class="block text-xs font-bold text-[#2B2118] mb-1">Temperature (°C)</label>
+                    <input id="input-temp" type="number" min="8" max="45" step="0.01" value="20.88" required oninput="syncTempFromNumber()" class="w-full font-extrabold text-sm text-[#A0522D] bg-white border border-[#DED5C4] rounded-lg px-2.5 py-1.5 outline-none mb-2" />
+                    <input id="temp-slider" type="range" min="8" max="45" step="0.1" value="20.88" oninput="syncTempFromSlider()" class="rust-slider" />
+                  </div>
+
+                  <div class="bg-[#FBF8F3] p-3 rounded-xl border border-[#DED5C4] focus-within:border-[#5F7A38]">
+                    <label for="input-humidity" class="block text-xs font-bold text-[#2B2118] mb-1">Humidity (%)</label>
+                    <input id="input-humidity" type="number" min="10" max="100" step="0.01" value="82.00" required oninput="syncFromNumber('humidity')" class="w-full font-extrabold text-sm text-[#5F7A38] bg-white border border-[#DED5C4] rounded-lg px-2.5 py-1.5 outline-none mb-2" />
+                    <input id="slider-humidity" type="range" min="10" max="100" step="0.1" value="82.00" oninput="syncFromSlider('humidity')" class="rust-slider" />
+                  </div>
+
+                  <div class="bg-[#FBF8F3] p-3 rounded-xl border border-[#DED5C4] focus-within:border-[#A0522D]">
+                    <label for="input-rainfall" class="block text-xs font-bold text-[#2B2118] mb-1">Rainfall (mm)</label>
+                    <input id="input-rainfall" type="number" min="20" max="300" step="0.01" value="202.94" required oninput="syncRainFromNumber()" class="w-full font-extrabold text-sm text-[#A0522D] bg-white border border-[#DED5C4] rounded-lg px-2.5 py-1.5 outline-none mb-2" />
+                    <input id="rainfall-slider" type="range" min="20" max="300" step="0.5" value="202.94" oninput="syncRainFromSlider()" class="rust-slider" />
+                  </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="flex flex-wrap items-center justify-between gap-3 pt-1">
+                  <div class="flex flex-wrap items-center gap-2.5">
+                    <button type="submit" class="btn-sienna px-5 py-2.5 rounded-lg font-bold text-sm cursor-pointer">
+                      Get recommendation
+                    </button>
+                    <button type="button" onclick="loadRandomCsvRow()" class="secondary-action px-4 py-2.5 rounded-lg font-bold text-xs sm:text-sm cursor-pointer">
+                      Use sample data
+                    </button>
+                  </div>
+
+                  <div class="flex items-center gap-2">
+                    <label for="csv-preset-select" class="text-xs font-semibold text-[#2B2118]/70">Preset:</label>
+                    <select id="csv-preset-select" onchange="loadCropPreset(this.value)" class="bg-[#FBF8F3] border border-[#D5CBB8] rounded-lg px-2.5 py-1.5 text-xs font-bold text-[#2B2118] outline-none cursor-pointer">
+                      <option value="rice" selected>Rice (High Rain)</option>
+                      <option value="maize">Maize</option>
+                      <option value="chickpea">Chickpea (Chana)</option>
+                      <option value="kidneybeans">Kidney Beans (Rajma)</option>
+                      <option value="pigeonpeas">Pigeon Peas (Arhar)</option>
+                      <option value="mothbeans">Moth Beans (Arid)</option>
+                      <option value="mungbean">Mung Bean (Moong)</option>
+                      <option value="blackgram">Black Gram (Urad)</option>
+                      <option value="lentil">Lentil (Masoor)</option>
+                      <option value="pomegranate">Pomegranate</option>
+                      <option value="banana">Banana</option>
+                      <option value="mango">Mango</option>
+                      <option value="grapes">Grapes</option>
+                      <option value="watermelon">Watermelon</option>
+                      <option value="muskmelon">Muskmelon</option>
+                      <option value="apple">Apple</option>
+                      <option value="orange">Orange</option>
+                      <option value="papaya">Papaya</option>
+                      <option value="coconut">Coconut</option>
+                      <option value="cotton">Cotton</option>
+                      <option value="jute">Jute</option>
+                      <option value="coffee">Coffee</option>
+                    </select>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+
+          <!-- LEFT BOTTOM BOX: RECOMMENDED CROP -->
+          <div id="recommended-crop-box" class="space-y-4">
+            <div class="flex flex-wrap items-center justify-between gap-2 px-1">
+              <div class="flex items-center gap-2">
+                <span class="w-2.5 h-2.5 rounded-full bg-[#5F7A38]"></span>
+                <h2 class="text-sm font-extrabold uppercase tracking-wider text-[#777268]">Recommendation</h2>
+              </div>
+              <span id="top-match-summary" class="text-xs font-bold text-[#A0522D]">ML Model Output</span>
+            </div>
+
+            <div id="primary-recommendation-banner" class="result-panel p-5 text-white space-y-3">
+              <div class="flex items-center justify-between gap-2">
+                <span class="text-[11px] font-bold uppercase tracking-wider text-white/60">Recommended crop</span>
+                <span id="banner-confidence" class="text-xs font-bold text-[#E9C77A]">Not assessed</span>
+              </div>
+              <div class="flex items-center gap-4">
+                <div id="banner-crop-icon" class="w-12 h-12 rounded-lg bg-white/10 flex items-center justify-center text-2xl shrink-0" aria-hidden="true">🌾</div>
+                <div>
+                  <div id="banner-crop-name" class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">Awaiting field values</div>
+                  <div id="banner-crop-hindi" class="mt-1 text-xs text-white/65">Run the assessment to see a result</div>
+                </div>
+              </div>
+              <div id="banner-input-recap" class="pt-3 border-t border-white/10 text-xs text-white/65">
+                N 90 · P 42 · K 43 · pH 6.50 · 20.88°C · 82% humidity · 202.94 mm rainfall
+              </div>
+            </div>
+
+            <div id="crop-options" class="grid grid-cols-1 sm:grid-cols-3 gap-3" aria-label="Top crop recommendations">
+              <article class="crop-option active">
+                <span class="crop-option-rank">1</span>
+                <div>
+                  <p class="crop-option-label">Best match</p>
+                  <h3 class="crop-option-name">Awaiting result</h3>
+                  <p class="crop-option-score">Run assessment</p>
+                </div>
+              </article>
+              <article class="crop-option">
+                <span class="crop-option-rank">2</span>
+                <div>
+                  <p class="crop-option-label">Alternative</p>
+                  <h3 class="crop-option-name">Not assessed</h3>
+                  <p class="crop-option-score">Profile match</p>
+                </div>
+              </article>
+              <article class="crop-option">
+                <span class="crop-option-rank">3</span>
+                <div>
+                  <p class="crop-option-label">Alternative</p>
+                  <h3 class="crop-option-name">Not assessed</h3>
+                  <p class="crop-option-score">Profile match</p>
+                </div>
+              </article>
+            </div>
+
+            <div class="advisory-panel p-4 flex items-start gap-3">
+              <div class="text-xs text-[#777268] leading-relaxed">
+                <strong id="advisory-headline" class="text-[#2B2118] block mb-1">Assessment summary</strong>
+                <span id="advisory-body">Enter your field values, then generate a recommendation.</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- RIGHT COLUMN (5 cols): TALL BOX — "Information about P, K, and all inputs" -->
+        <aside id="inputs-info-box" class="lg:col-span-5 portal-card p-6 space-y-5 lg:sticky lg:top-24">
+          <div class="border-b border-[#EFE8DA] pb-3.5">
+            <p class="text-[11px] font-bold uppercase tracking-wider text-[#777268]">Live field values</p>
+            <h2 class="text-lg sm:text-xl font-extrabold text-[#2B2118] mt-0.5">Current inputs</h2>
+          </div>
+
+          <div class="space-y-3 text-xs">
+            <div class="p-3.5 rounded-xl bg-[#F5E6DF]/55 border border-[#A0522D]/25 space-y-1">
+              <div class="flex items-center justify-between">
+                <strong class="text-sm text-[#A0522D]">P — Phosphorus (kg/ha)</strong>
+                <span id="info-live-p" class="px-2 py-0.5 rounded bg-[#A0522D] text-white font-mono text-[11px] font-bold">42 kg/ha</span>
+              </div>
+              <p class="text-[#2B2118]/85 leading-relaxed">
+                Drives root development, flowering, and seed formation. Range: <strong>5–145 kg/ha</strong>.
+              </p>
+            </div>
+
+            <div class="p-3.5 rounded-xl bg-[#F5EBD6]/70 border border-[#E09F3E]/35 space-y-1">
+              <div class="flex items-center justify-between">
+                <strong class="text-sm text-[#A0522D]">K — Potassium (kg/ha)</strong>
+                <span id="info-live-k" class="px-2 py-0.5 rounded bg-[#E09F3E] text-[#2B2118] font-mono text-[11px] font-bold">43 kg/ha</span>
+              </div>
+              <p class="text-[#2B2118]/85 leading-relaxed">
+                Regulates water uptake, drought tolerance, and disease resistance. Range: <strong>5–205 kg/ha</strong>.
+              </p>
+            </div>
+
+            <div class="p-3.5 rounded-xl bg-[#E6EEDF]/65 border border-[#5F7A38]/25 space-y-1">
+              <div class="flex items-center justify-between">
+                <strong class="text-sm text-[#5F7A38]">N — Nitrogen (kg/ha)</strong>
+                <span id="info-live-n" class="px-2 py-0.5 rounded bg-[#5F7A38] text-white font-mono text-[11px] font-bold">90 kg/ha</span>
+              </div>
+              <p class="text-[#2B2118]/85 leading-relaxed">
+                Fuels leafy vegetative growth and chlorophyll. Range: <strong>0–140 kg/ha</strong>.
+              </p>
+            </div>
+
+            <div class="p-3 rounded-xl bg-[#FBF8F3] border border-[#DED5C4] space-y-1">
+              <div class="flex items-center justify-between">
+                <strong class="text-[#2B2118]">pH — Soil Acidity / Alkalinity</strong>
+                <span id="info-live-ph" class="px-2 py-0.5 rounded bg-[#2B2118] text-[#FBF8F3] font-mono text-[11px] font-bold">pH 6.50</span>
+              </div>
+              <p class="text-[#2B2118]/80 leading-relaxed">
+                Controls nutrient availability. Range: <strong>3.5–9.9</strong> (most crops thrive in <strong>6.0–7.5</strong>).
+              </p>
+            </div>
+
+            <div class="p-3 rounded-xl bg-[#FBF8F3] border border-[#DED5C4] space-y-1">
+              <div class="flex items-center justify-between">
+                <strong class="text-[#A0522D]">Temperature (°C)</strong>
+                <span id="info-live-temp" class="font-mono text-[11px] font-bold text-[#A0522D]">20.88 °C</span>
+              </div>
+              <p class="text-[#2B2118]/80 leading-relaxed">
+                Range: <strong>8.8–43.7 °C</strong>. Matches crop thermal requirements across seasons.
+              </p>
+            </div>
+
+            <div class="p-3 rounded-xl bg-[#FBF8F3] border border-[#DED5C4] space-y-1">
+              <div class="flex items-center justify-between">
+                <strong class="text-[#5F7A38]">Humidity (%)</strong>
+                <span id="info-live-hum" class="font-mono text-[11px] font-bold text-[#5F7A38]">82.00%</span>
+              </div>
+              <p class="text-[#2B2118]/80 leading-relaxed">
+                Range: <strong>14–100%</strong>. Distinguishes dryland pulses from humid tropical crops.
+              </p>
+            </div>
+
+            <div class="p-3 rounded-xl bg-[#FBF8F3] border border-[#DED5C4] space-y-1">
+              <div class="flex items-center justify-between">
+                <strong class="text-[#A0522D]">Rainfall (mm)</strong>
+                <span id="info-live-rain" class="font-mono text-[11px] font-bold text-[#A0522D]">202.94 mm</span>
+              </div>
+              <p class="text-[#2B2118]/80 leading-relaxed">
+                Range: <strong>20–298 mm</strong>. Separates arid crops from high-rainfall paddy crops.
+              </p>
+            </div>
+          </div>
+        </aside>
+
+      </section>
+    </div>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="bg-[#F3F0E8] text-[#777268] py-5 px-4 sm:px-6 lg:px-8 mt-8 border-t border-[#E6DEC8]">
+    <div class="max-w-7xl mx-auto flex items-center justify-between gap-4 text-xs">
+      <span class="font-semibold text-[#2B2118]">Crop Recommendation</span>
+      <a href="#home" class="hover:text-[#2B2118] font-semibold transition">Back to top ↑</a>
+    </div>
+  </footer>
+
+  <!-- TOAST NOTIFICATION -->
+  <div id="toast" class="fixed bottom-5 right-5 z-50 hidden items-center gap-2.5 px-4 py-3 rounded-xl bg-[#2B2118] text-[#FBF8F3] border border-[#E09F3E] shadow-xl text-xs font-semibold">
+    <span class="w-2.5 h-2.5 rounded-full bg-[#5F7A38]"></span>
+    <span id="toast-msg">Updated!</span>
+  </div>
+
+  <!-- APPLICATION JAVASCRIPT -->
+  <script src="app.js"></script>
+</body>
+</html>
